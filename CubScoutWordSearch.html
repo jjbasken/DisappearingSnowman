@@ -20,11 +20,7 @@
     user-select: none;
   }
 
-  header {
-    text-align: center;
-    margin-bottom: 24px;
-  }
-
+  header { text-align: center; margin-bottom: 24px; }
   .fleur { font-size: 48px; line-height: 1; }
 
   h1 {
@@ -37,11 +33,7 @@
     margin: 6px 0 4px;
   }
 
-  .subtitle {
-    color: #7ebd94;
-    font-size: 13px;
-    letter-spacing: 2px;
-  }
+  #progress { color: #7ebd94; font-size: 13px; letter-spacing: 2px; margin-top: 4px; }
 
   .main {
     display: flex;
@@ -53,33 +45,28 @@
 
   #grid-container {
     background: #0a1f14;
-    padding: 10px;
+    padding: 12px;
     border-radius: 10px;
     border: 2px solid #f5c84233;
     box-shadow: 0 8px 40px #000a, 0 0 0 1px #f5c84211;
-    display: inline-block;
     cursor: crosshair;
   }
 
-  #grid {
-    display: grid;
-    gap: 2px;
-  }
+  #grid { display: grid; gap: 3px; }
 
   .cell {
-    width: clamp(22px, 3.8vw, 32px);
-    height: clamp(22px, 3.8vw, 32px);
+    width: 48px;
+    height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: clamp(10px, 2vw, 14px);
+    font-size: 18px;
     font-weight: 700;
     color: #a8d5b5;
     background: transparent;
     border: 1px solid transparent;
-    border-radius: 3px;
+    border-radius: 4px;
     transition: background 0.08s, color 0.08s;
-    font-family: 'Source Sans 3', monospace;
   }
 
   .cell.selecting {
@@ -88,14 +75,7 @@
     border-color: #f5c84288;
   }
 
-  .cell.found {
-    border-radius: 3px;
-  }
-
-  .sidebar {
-    min-width: 160px;
-    max-width: 200px;
-  }
+  .sidebar { min-width: 150px; }
 
   .sidebar-title {
     color: #f5c842;
@@ -107,14 +87,10 @@
     margin-bottom: 12px;
   }
 
-  #word-list {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
+  #word-list { display: flex; flex-direction: column; gap: 7px; }
 
   .word-item {
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
     letter-spacing: 1px;
     color: #7ebd94;
@@ -123,13 +99,8 @@
     align-items: center;
     gap: 6px;
   }
-
-  .word-item.found-word {
-    text-decoration: line-through;
-    opacity: 0.8;
-  }
-
-  .word-item .check { font-size: 10px; }
+  .word-item.found-word { text-decoration: line-through; opacity: 0.8; }
+  .word-item .check { font-size: 11px; }
 
   #reset-btn {
     margin-top: 20px;
@@ -165,24 +136,11 @@
   #celebration h2 { color: #f5c842; font-size: 36px; letter-spacing: 3px; text-shadow: 0 0 30px #f5c842; font-family: 'Playfair Display', serif; }
   #celebration p { color: #7ebd94; font-size: 16px; }
   #celebration button {
-    margin-top: 12px;
-    padding: 12px 36px;
-    background: #f5c842;
-    color: #1a1a1a;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    letter-spacing: 1px;
-    font-family: inherit;
-  }
-
-  #progress {
-    color: #7ebd94;
-    font-size: 13px;
-    letter-spacing: 2px;
-    margin-top: 4px;
+    margin-top: 12px; padding: 12px 36px;
+    background: #f5c842; color: #1a1a1a;
+    border: none; border-radius: 8px;
+    font-size: 16px; font-weight: 700;
+    cursor: pointer; letter-spacing: 1px; font-family: inherit;
   }
 </style>
 </head>
@@ -213,20 +171,9 @@
 </div>
 
 <script>
-const WORDS = [
-  "ARROW","BADGE","BEAR","CAMPING","DEN","DERBY",
-  "EAGLE","HIKING","KNOT","NECKERCHIEF","PACK","PINEWOOD",
-  "SCOUT","UNIFORM","WOLF","WEBELOS","HONOR"
-];
-
-const COLORS = [
-  "#f87171","#fb923c","#facc15","#4ade80","#34d399",
-  "#38bdf8","#818cf8","#e879f9","#f472b6","#a78bfa",
-  "#6ee7b7","#fbbf24","#60a5fa","#f9a8d4","#86efac",
-  "#67e8f9","#c084fc","#fda4af"
-];
-
-const GRID_SIZE = 18;
+const WORDS = ["AKELA", "BADGE", "BEAR", "DEN", "KNOT", "PACK", "SCOUT", "WOLF"];
+const COLORS = ["#f87171","#fb923c","#facc15","#4ade80","#34d399","#38bdf8","#818cf8","#e879f9"];
+const GRID_SIZE = 9;
 const DIRS = [[0,1],[1,0],[1,1],[-1,1],[0,-1],[-1,0],[-1,-1],[1,-1]];
 
 let grid = [], placedWords = [], foundWords = [], wordColors = {};
@@ -235,9 +182,7 @@ let isSelecting = false, startCell = null, currentSelection = [];
 function generateGame() {
   grid = Array.from({length: GRID_SIZE}, () => Array(GRID_SIZE).fill(""));
   placedWords = [];
-
   const sorted = [...WORDS].sort((a,b) => b.length - a.length);
-
   for (const word of sorted) {
     let placed = false;
     for (let attempt = 0; attempt < 500 && !placed; attempt++) {
@@ -255,7 +200,6 @@ function generateGame() {
       }
     }
   }
-
   const alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   for (let r = 0; r < GRID_SIZE; r++)
     for (let c = 0; c < GRID_SIZE; c++)
@@ -282,58 +226,7 @@ function getCellsBetween(r1, c1, r2, c2) {
   return cells;
 }
 
-function renderGrid() {
-  const container = document.getElementById("grid");
-  container.style.gridTemplateColumns = `repeat(${GRID_SIZE}, 1fr)`;
-  container.innerHTML = "";
-
-  for (let r = 0; r < GRID_SIZE; r++) {
-    for (let c = 0; c < GRID_SIZE; c++) {
-      const cell = document.createElement("div");
-      cell.className = "cell";
-      cell.textContent = grid[r][c];
-      cell.dataset.r = r;
-      cell.dataset.c = c;
-
-      cell.addEventListener("mousedown", e => { e.preventDefault(); startSelection(r, c); });
-      cell.addEventListener("mouseover", () => { if (isSelecting) extendSelection(r, c); });
-      cell.addEventListener("touchstart", e => { e.preventDefault(); startSelection(r, c); }, {passive:false});
-      cell.addEventListener("touchmove", e => {
-        e.preventDefault();
-        const touch = e.touches[0];
-        const el = document.elementFromPoint(touch.clientX, touch.clientY);
-        if (el && el.classList.contains("cell")) extendSelection(+el.dataset.r, +el.dataset.c);
-      }, {passive:false});
-
-      container.appendChild(cell);
-    }
-  }
-}
-
-function renderWordList() {
-  const list = document.getElementById("word-list");
-  list.innerHTML = "";
-  WORDS.forEach((word, i) => {
-    const div = document.createElement("div");
-    div.className = "word-item" + (foundWords.includes(word) ? " found-word" : "");
-    div.id = "word-" + word;
-    div.style.color = foundWords.includes(word) ? wordColors[word] : "#7ebd94";
-    div.innerHTML = foundWords.includes(word)
-      ? `<span class="check">✓</span>${word}`
-      : word;
-    list.appendChild(div);
-  });
-  updateProgress();
-}
-
-function updateProgress() {
-  document.getElementById("progress").textContent =
-    `${foundWords.length} / ${placedWords.length} words found`;
-}
-
-function getCellEl(r, c) {
-  return document.querySelector(`[data-r="${r}"][data-c="${c}"]`);
-}
+function getCellEl(r, c) { return document.querySelector(`[data-r="${r}"][data-c="${c}"]`); }
 
 function clearSelectionHighlight() {
   currentSelection.forEach(([r,c]) => {
@@ -367,29 +260,22 @@ function extendSelection(r, c) {
 function finishSelection() {
   if (!isSelecting) return;
   isSelecting = false;
-
   const selected = currentSelection.map(([r,c]) => grid[r][c]).join("");
   const selectedRev = [...currentSelection].reverse().map(([r,c]) => grid[r][c]).join("");
-
   let matched = null;
   for (const pw of placedWords) {
     if (foundWords.includes(pw.word)) continue;
-    const cellsMatch = (a, b) => a.length === b.length && a.every(([r,c],i) => b[i][0]===r && b[i][1]===c);
-    const cellsMatchRev = (a, b) => a.length === b.length && a.every(([r,c],i) => b[b.length-1-i][0]===r && b[b.length-1-i][1]===c);
-    if ((selected === pw.word || selectedRev === pw.word) &&
-        (cellsMatch(currentSelection, pw.cells) || cellsMatchRev(currentSelection, pw.cells))) {
-      matched = pw;
-      break;
+    const cellsMatch = (a,b) => a.length===b.length && a.every(([r,c],i) => b[i][0]===r && b[i][1]===c);
+    const cellsMatchRev = (a,b) => a.length===b.length && a.every(([r,c],i) => b[b.length-1-i][0]===r && b[b.length-1-i][1]===c);
+    if ((selected===pw.word || selectedRev===pw.word) && (cellsMatch(currentSelection,pw.cells) || cellsMatchRev(currentSelection,pw.cells))) {
+      matched = pw; break;
     }
   }
-
   clearSelectionHighlight();
-
   if (matched) {
     const color = COLORS[foundWords.length % COLORS.length];
     foundWords.push(matched.word);
     wordColors[matched.word] = color;
-
     matched.cells.forEach(([r,c]) => {
       const el = getCellEl(r,c);
       if (el) {
@@ -400,24 +286,54 @@ function finishSelection() {
         el.style.borderColor = color + "88";
       }
     });
-
     renderWordList();
-
-    if (foundWords.length === placedWords.length) {
+    if (foundWords.length === placedWords.length)
       setTimeout(() => document.getElementById("celebration").classList.add("show"), 500);
-    }
   }
-
   currentSelection = [];
   startCell = null;
 }
 
+function renderGrid() {
+  const container = document.getElementById("grid");
+  container.style.gridTemplateColumns = `repeat(${GRID_SIZE}, 1fr)`;
+  container.innerHTML = "";
+  for (let r = 0; r < GRID_SIZE; r++) {
+    for (let c = 0; c < GRID_SIZE; c++) {
+      const cell = document.createElement("div");
+      cell.className = "cell";
+      cell.textContent = grid[r][c];
+      cell.dataset.r = r;
+      cell.dataset.c = c;
+      cell.addEventListener("mousedown", e => { e.preventDefault(); startSelection(r, c); });
+      cell.addEventListener("mouseover", () => { if (isSelecting) extendSelection(r, c); });
+      cell.addEventListener("touchstart", e => { e.preventDefault(); startSelection(r, c); }, {passive:false});
+      cell.addEventListener("touchmove", e => {
+        e.preventDefault();
+        const touch = e.touches[0];
+        const el = document.elementFromPoint(touch.clientX, touch.clientY);
+        if (el && el.classList.contains("cell")) extendSelection(+el.dataset.r, +el.dataset.c);
+      }, {passive:false});
+      container.appendChild(cell);
+    }
+  }
+}
+
+function renderWordList() {
+  const list = document.getElementById("word-list");
+  list.innerHTML = "";
+  WORDS.forEach(word => {
+    const div = document.createElement("div");
+    div.className = "word-item" + (foundWords.includes(word) ? " found-word" : "");
+    div.style.color = foundWords.includes(word) ? wordColors[word] : "#7ebd94";
+    div.innerHTML = foundWords.includes(word) ? `<span class="check">✓</span>${word}` : word;
+    list.appendChild(div);
+  });
+  document.getElementById("progress").textContent = `${foundWords.length} / ${placedWords.length} words found`;
+}
+
 function initGame() {
-  foundWords = [];
-  wordColors = {};
-  currentSelection = [];
-  isSelecting = false;
-  startCell = null;
+  foundWords = []; wordColors = {}; currentSelection = []; isSelecting = false; startCell = null;
   document.getElementById("celebration").classList.remove("show");
   generateGame();
   renderGrid();
@@ -426,7 +342,6 @@ function initGame() {
 
 document.addEventListener("mouseup", finishSelection);
 document.addEventListener("touchend", finishSelection);
-
 initGame();
 </script>
 </body>
