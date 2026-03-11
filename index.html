@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Disappearing Snowman</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="snowflakes" aria-hidden="true"></div>
+
+  <div class="game-container">
+    <h1>&#10052; Disappearing Snowman &#10052;</h1>
+    <p class="subtitle">Guess the word before the snowman melts!</p>
+
+    <div class="game-area">
+
+      <!-- ── Snowman ── -->
+      <div class="snowman-section">
+        <svg id="snowman" viewBox="0 0 200 300" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="snowGrad" cx="38%" cy="32%" r="62%">
+              <stop offset="0%" style="stop-color:#ffffff"/>
+              <stop offset="100%" style="stop-color:#cce6f5"/>
+            </radialGradient>
+            <radialGradient id="puddleGrad" cx="50%" cy="40%" r="55%">
+              <stop offset="0%" style="stop-color:#a8d8f0;stop-opacity:0.85"/>
+              <stop offset="100%" style="stop-color:#7bbce0;stop-opacity:0.35"/>
+            </radialGradient>
+          </defs>
+
+          <!-- Static ground -->
+          <ellipse cx="100" cy="293" rx="90" ry="10" fill="#d5edf8" opacity="0.55"/>
+
+          <!-- Melt puddle (grows as snowman melts) -->
+          <ellipse id="puddle" cx="100" cy="289" rx="0" ry="0"
+                   fill="url(#puddleGrad)"
+                   style="transition: rx 1s ease, ry 1s ease;"/>
+
+          <!-- Base snowball -->
+          <circle id="base" class="meltable"
+                  cx="100" cy="240" r="52"
+                  fill="url(#snowGrad)" stroke="#b0d4ec" stroke-width="1.5"/>
+
+          <!-- Middle snowball -->
+          <circle id="middle" class="meltable"
+                  cx="100" cy="157" r="40"
+                  fill="url(#snowGrad)" stroke="#b0d4ec" stroke-width="1.5"/>
+
+          <!-- Scarf (around neck) -->
+          <g id="scarf" class="meltable">
+            <path d="M 66 118 Q 100 111 134 118 L 132 129 Q 100 122 68 129 Z"
+                  fill="#cc3333"/>
+            <path d="M 116 125 L 128 150 L 121 151 L 109 125 Z"
+                  fill="#cc3333"/>
+          </g>
+
+          <!-- Left arm (branch) -->
+          <g id="left-arm" class="meltable">
+            <line x1="62" y1="148" x2="20" y2="116"
+                  stroke="#8B5E3C" stroke-width="5" stroke-linecap="round"/>
+            <line x1="20" y1="116" x2="6"  y2="101"
+                  stroke="#8B5E3C" stroke-width="3.5" stroke-linecap="round"/>
+            <line x1="20" y1="116" x2="8"  y2="127"
+                  stroke="#8B5E3C" stroke-width="3" stroke-linecap="round"/>
+          </g>
+
+          <!-- Right arm (branch) -->
+          <g id="right-arm" class="meltable">
+            <line x1="138" y1="148" x2="180" y2="116"
+                  stroke="#8B5E3C" stroke-width="5" stroke-linecap="round"/>
+            <line x1="180" y1="116" x2="194" y2="101"
+                  stroke="#8B5E3C" stroke-width="3.5" stroke-linecap="round"/>
+            <line x1="180" y1="116" x2="192" y2="127"
+                  stroke="#8B5E3C" stroke-width="3" stroke-linecap="round"/>
+          </g>
+
+          <!-- Buttons on middle snowball -->
+          <g id="buttons" class="meltable">
+            <circle cx="100" cy="143" r="4.5" fill="#445"/>
+            <circle cx="100" cy="157" r="4.5" fill="#445"/>
+            <circle cx="100" cy="171" r="4.5" fill="#445"/>
+          </g>
+
+          <!-- Head snowball -->
+          <circle id="head" class="meltable"
+                  cx="100" cy="83" r="28"
+                  fill="url(#snowGrad)" stroke="#b0d4ec" stroke-width="1.5"/>
+
+          <!-- Hat -->
+          <g id="hat" class="meltable">
+            <rect x="64"  y="54" width="72" height="9"  rx="3" fill="#222"/>
+            <rect x="75"  y="16" width="50" height="41" rx="4" fill="#222"/>
+            <!-- hat band -->
+            <rect x="75"  y="47" width="50" height="9"  rx="0" fill="#444"/>
+          </g>
+
+          <!-- Eyes -->
+          <g id="eyes" class="meltable">
+            <circle cx="91"  cy="76" r="5" fill="#222"/>
+            <circle cx="109" cy="76" r="5" fill="#222"/>
+            <!-- eye shine -->
+            <circle cx="92.5" cy="74.5" r="1.8" fill="white" opacity="0.7"/>
+            <circle cx="110.5" cy="74.5" r="1.8" fill="white" opacity="0.7"/>
+          </g>
+
+          <!-- Carrot nose -->
+          <polygon id="nose" class="meltable"
+                   points="100,82 121,87 100,92"
+                   fill="#e8720c"/>
+
+          <!-- Smile (5 dots) -->
+          <g id="smile" class="meltable">
+            <circle cx="88"  cy="97"  r="2.8" fill="#222"/>
+            <circle cx="93"  cy="102" r="2.8" fill="#222"/>
+            <circle cx="100" cy="104" r="2.8" fill="#222"/>
+            <circle cx="107" cy="102" r="2.8" fill="#222"/>
+            <circle cx="112" cy="97"  r="2.8" fill="#222"/>
+          </g>
+        </svg>
+
+        <div class="wrong-count">
+          Wrong: <strong id="wrong-num">0</strong> / 9
+        </div>
+        <div class="wrong-bars" id="wrong-bars"></div>
+      </div>
+
+      <!-- ── Word / Controls ── -->
+      <div class="word-section">
+        <div class="hint-line">Hint: <span id="hint-text"></span></div>
+
+        <div id="word-display"></div>
+
+        <div class="wrong-letters" id="wrong-letters-display"></div>
+
+        <div id="alphabet"></div>
+
+        <div id="message"></div>
+
+        <button id="new-game-btn" onclick="newGame()">New Game</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
