@@ -10,7 +10,7 @@ const WORD_LIST = [
   { word: 'MORALLY',     hint: '"and ___ straight." — Oath' },
   { word: 'TRUSTWORTHY',     hint: '"A scout is ___" — Law' },
   { word: 'LOYAL',    hint: 'Scout Law' },
-  { word: 'HELFPUL', hint: 'Scout Law' },
+  { word: 'HELPFUL', hint: 'Scout Law' },
   { word: 'COURTEOUS',  hint: 'Scout Law' },
   { word: 'KIND',  hint: 'Scout Law' },
   { word: 'OBEDIENT',  hint: 'Scout Law' },
